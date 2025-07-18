@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake News Detector</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Fake News Detector</h1>
+        <p>Welcome, {{ current_user.username }}! <a href="{{ url_for('logout') }}">Logout</a></p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('predict_news') }}">
+            <div class="form-group">
+                <label for="news_text">Enter News Article:</label>
+                <textarea id="news_text" name="news_text" rows="10" placeholder="Paste the news article here..." required>{{ news_text }}</textarea>
+            </div>
+            <button type="submit">Detect Fake News</button>
+        </form>
+
+        {% if prediction_result %}
+            <div class="result-box">
+                <h2>Prediction:</h2>
+                <p>{{ prediction_result }}</p>
+            </div>
+        {% endif %}
+        {% if secret_key_notice %}
+    <div class="alert alert-secondary mt-4">
+        <small>{{ secret_key_notice }}</small>
+    </div>
+{% endif %}
+
+    </div>
+</body>
+</html>
